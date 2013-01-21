@@ -1,0 +1,472 @@
+<!--
+Google IO 2012 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google IO 2012</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/mail-logo_plashka.svg"></span>
+    </article>
+  </slide>
+
+  <slide class="title-slide segue nobackground">
+    <aside class="gdbar"><img src="images/mail-logo.svg"></aside>
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle>Введение</h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Зачем изучать алгоритмы?</h2>
+    </hgroup>
+    <article>
+      <ul class="build" style="width:70%">
+        <li>Анализировать существующие программы</li>
+        <li>Выбирать инструменты для решения конретных задач</li>
+        <li>Разрабатывать собственные алгоритмы</li>
+      </ul>
+      
+      <img style="float: right; width 25%;" src="pics/question-flip.png"/>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2><b>Алгоритм</b> - это Строго опрелелённая последовательность действий, позволяющая получить требуемый результат</h2>
+    </hgroup>
+    <article> 
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Умножение в столбик</h2>
+    </hgroup>
+    <article>
+      <div class='columns-2'>
+<pre style="float: left; width: 100%;">
+    67235
+  *   252
+    -----
+   134470
+  336175
+ 134470  
+=========
+ 16943220
+</pre>
+      <div style="float: right; width: 100%;">
+      <ul style="float: left; width: 100%;" class="build">
+        <li>5 * 3 умножений</li>
+        <li>5 + 3 делений на 10</li>
+        <li>5 * 3 сложений</li>
+      </ul>
+      </div>
+      </div>
+      
+      <ul class="build">
+        <li>T(5, 3) = 38 операций</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Умножение в столбик</h2>
+    </hgroup
+    <article>
+<pre style="display: block;" class="prettyprint" data-lang="c++">
+std::vector&lt;int&gt; multiply(
+  std::vector&lt;int&gt; &amp;a;
+  std::vector&lt;int&gt; &amp;b;
+  int base = 10)
+{
+  std::vector&lt;int&gt; result(a.size() + b.size() + 1);
+
+  for (int i = 0; i &lt; a.size(); ++i) {
+    for (int j = 0 ; j &lt; b.size(); ++j) {
+      result[i + j] += a[i] * b[j];
+      result[i + j + 1] += result[i + j] / base;
+      result[i + j] %= base;  
+    }  
+  }
+  return result;
+}
+</pre>
+    </article> 
+  </slide>
+  
+  <slide>
+    <hgroup>
+      <h2>Сложность алгоритма</h2>
+      <h2>O(n) нотация</h2>
+    </hgroup>
+    <article>
+      <h3> T(n) = O(f(n)) <=>  lim(n &rarr; inf, T(n) / f(n)) = C </h3>
+      <ul>
+        <li class="bold">при больших n важна f(n)</li>
+        <li>при малых n важно C</li>
+      </ul>
+
+      <ul class='build'>
+        <li>O(n&sup2;)</li>
+        <li>O(n&nbsp;ln&sup2;(n))</li>
+        <li>O(n&nbsp;ln(n))</li>
+        <li>O(n)</li>
+        <li>O(ln(n))</li>
+        <li>O(1)</li>
+      </ul>
+    </article> 
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Отрезок с наибольшей суммой</h2>
+    </hgroup>
+    <article>
+      <span>
+        Дана последовательность целых чисел a<sub>1</sub>, a<sub>2</sub> ... a<sub>n</sub>.
+        Найти такой интервал <nobr>[i, j] : 1 &le; i &le; j &le; n</nobr>,
+        что сумма a<sub>i</sub> + a<sub>i+1</sub> + .. + a<sub>j</sub> максимальна.
+      </span>
+    </article>
+  </slide> 
+
+  <slide>
+    <hgroup>
+      <h2>Отрезок с наибольшей суммой  O(n<sup>3</sup>)</h2>
+    </hgroup>
+    <article>
+<pre style="display: block;" class="prettyprint" data-lang="c++">
+<b>int calc_sum(std::vector&lt;int&gt; &amp;a; int i, int j) {
+    for (int k = i; k &le; j; ++k) {
+      sum += a[k];
+    }
+}</b>
+int best_sum = 0; int best_i = 0, best_j = 0;
+for (int i = 0; i &lt; a.size(); ++i) {
+  for (int j = i; j &lt; a.size(); ++j) {
+    int sum = <b>calc_sum(a, i, j);</b>
+    if (sum &gt; best_sum) {
+      best_sum = sum;
+      best_i = i;
+      best_j = j;
+    }
+  }
+}
+</pre>
+    </article>
+  </slide> 
+  
+  <slide>
+    <hgroup>
+      <h2>Отрезок с наибольшей суммой  O(n<sup>2</sup>)</h2>
+    </hgroup>
+    <article>
+<pre style="display: block;" class="prettyprint" data-lang="c++">
+std::vector&lt;int&gt; &amp;a;
+int best_sum = 0; int best_i = 0, best_j = 0;
+for (int i = 0; i &lt; a.size(); ++i) {
+  <b>int sum = 0;</b>
+  for (int j = i; j &lt; a.size(); ++j) {
+    <b>sum += a[j];</b>
+    if (sum &gt; best_sum) {
+      best_sum = sum;
+      best_i = i;
+      best_j = j;
+    }
+  }
+}
+</pre>
+    </article>
+  </slide> 
+ 
+  <slide>
+    <hgroup>
+      <h2>Отрезок с наибольшей суммой  O(n)</h2>
+    </hgroup>
+    <article class="smaller">
+<pre style="display: block;" class="prettyprint" data-lang="c++">
+std::vector&lt;int&gt; a;
+
+std::vector&lt;int&gt; left_sum(a.size(), 0);
+int run_sum = 0;
+for (int i = 0; i &lt; a.size(); ++i) {
+  run_sum += a[i];
+  run_sum[i] = run_sum;
+}
+
+std::vector&lt;int&gt; min_left_index(a.size(), -1);
+int min_left_sum = 0;
+int min_left_index_value = -1;
+for (int i = 0; i &lt; a.size(); ++i) {
+  <b>if (min_left_sum &gt; left_sum[i]) {
+    min_left_sum = left_sum[i];
+    min_left_index_value = i;
+  }</b>
+  min_left_index[i] = min_left_index_value;
+}
+...
+</pre>
+    </article>
+  </slide>  
+
+
+  <slide>
+    <hgroup>
+      <h2>Отрезок с наибольшей суммой  O(n)</h2>
+    </hgroup>
+    <article >
+<pre style="display: block;" class="prettyprint" data-lang="c++">
+std::vector&lt;int&gt; a;
+
+std::vector&lt;int&gt; left_sum(a.size(), 0);
+std::vector&lt;int&gt; min_left_index(a.size(), -1);
+...
+int best_sum = 0; int best_i = 0, best_j = 0;
+
+for (int j = 1; j &gt; a.size(); ++j) {
+  <b>int min_left_index_value = min_left_index[j - 1];
+  int sum = left_sum[j] - left_sum[min_left_index_value];</b>
+
+  if (sum &gt; best_sum) {
+    best_sum = sum;
+    best_i = min_left_index_value + 1;
+    best_j = j;
+  }
+}
+</pre>
+    </article>
+  </slide>  
+
+  <slide>
+    <hgroup>
+      <h2>Отрезок с наибольшей суммой</h2>
+      <h3>Сравнение алгоритмов</h3>
+    </hgroup>
+    <article>
+      <table>
+        <tr>
+          <th>Версия</th><th>Время</th><th>Память</th><th>Размер</th>
+        </tr>
+        <tr>
+          <td>1</td><td>O(n<sup>3</sup>)</td><td>O(1)</td><td>16</td>
+        </tr>
+        <tr>
+          <td>2</td><td>O(n<sup>2</sup>)</td><td>O(1)</td><td>13</td>
+        </tr>
+        <tr>
+          <td>3</td><td>O(n)</td><td class="highlight">O(n)</td><td>29</td>
+        </tr>
+      </table>
+      <vspace/>
+      <ul class="build">
+        <li>Тривиальный алгоритм часто легко улучшить</li>
+        <li>Не останавливайтесь на достигнутом</li>
+      </ul>
+    </article>
+  </slide> 
+
+  <Slide>
+    <hgroup>
+        <h2>Быстрый не всегда значит лучший</h2>
+    </hgroup>
+    <article>
+      <img src="pics/probki.jpg"/>
+    </article>
+  </slide>
+  <slide class="quote nobackground">
+    <article class="vcenter">
+      <q>
+        Premature optimization is the root of all evil
+      </q>
+      <div class="author">
+        Donald Knuth
+      </div>
+    </article>
+  </slide> 
+
+  <slide>
+    <hgroup>
+      <h2>Методы конструирования алгоритмов</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Перебор вариантов</li>
+        <li>Динамическое программирование</li>
+      </ul>
+    </article>
+  </slide> 
+
+  <slide>
+    <hgroup>
+      <h2>Динамическое программирование</h2>
+      <h3>Разделяй и властвуй</h3>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Представляем результат как простую операцию над решением задачи меньшего размера</li>
+        <li>Решаем одну или несколько подзадач</li>
+        <li>Тривиальное решение для Arg &lt; Const</li>
+      </ul>
+    </article>
+  </slide>
+  
+  <slide>
+    <hgroup>
+      <h2>Fibonachi</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>F(0) = 0</li>
+        <li>F(1) = 1</li>
+        <li>F(n) = F(n-1) + F(n-2)</li>
+      </ul>
+<pre style="display: block;" class="prettyprint" data-lang="c++">
+int fibonachi(int n) {
+  if (n == 0 || n == 1) {
+    return n;
+  } else {
+    return fibonachi(n - 1) + fibonachi(n - 2);
+  }
+}
+</pre>
+    </article>
+  </slide>
+  
+  <slide>
+    <hgroup>
+      <h2>Ханойские башни</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>диски n, n-1, ... 1 лежат на 1ом стержне</li>
+        <li>переносим диски 1,2, ... n-1 на 2ой стержень</li>
+        <li>переносим диск n на 3ий стержень</li>
+        <li>переносим диски 1,2, ... n-1 на 3 стержень</li>
+      </ul>
+      <ul class="build">
+        <li>T(n) = 2 * T(n-1) + 1</li>
+        <li>T(1) = 1</li>
+        <li>T(n) = 2<sup>n</sup> - 1</li>
+      </ul>
+        <img style="position: absolute; right: 20px; bottom: 80px; width 25%;" src="pics/towerofhanoi.jpg"/>
+    </article>
+  </slide>
+  
+  <slide>
+    <hgroup>
+      <h2>Ханойские башни</h2>
+    </hgroup>
+    <article>
+<pre style="display: block;" class="prettyprint" data-lang="c++">
+int hanoi(int from_index, int to_index, int left_index, int n) {
+  if (n == 1) {
+    std::cout &lt;&lt; from_index &lt;&lt; " - " &lt;&lt; to_index &lt;&lt;  std::endl;
+  } else {
+    hanoi(from_index, left_index, to_index, n - 1);
+    hanoi(from_index, to_index, left_index, 1);
+    hanoi(left_index, to_index, from_index, n - 1);
+  }
+}
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <div style="height:25%;">&nbsp;</div>
+    <div style="text-align: center;">
+      <h2 class="alert">Не используйте рекурсию</h2>
+    </div>
+    <div style="height:5%;">&nbsp;</div>
+    <ul>
+      <li>Размер стека по умолчанию в современных ОС 1..16 МБ</li>
+      <li>Вызов функции - дорогая операция</li>
+      <li>Стек не нужен если известна поледовательность вызовов</li>
+    </ul>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Ханойские башни</h2>
+    </hgroup>
+    <article class='smaller'>
+<pre style="display: block;" class="prettyprint" data-lang="c++">
+struct hanoi_task {
+  int from_index;
+  int to_index;
+  int left_index; 
+  int number;
+};
+
+std::stack&lt;hanoi_task&gt; task_stack;
+task_stack.push(hanoi_task({1, 2, 3, n}));
+while (!task_stack.empty()) {
+  <b>hanoi_task task = task_stack.top();</b>
+  task_stack.pop();
+  if (task.number == 1) {
+    std::cout &lt;&lt; task.from_index &lt;&lt; " - " &lt;&lt; task.to_index &lt;&lt;  std::endl;
+  } else {<b>
+    task_stack.push({task.left_index, task.to_index, task.from_index, task.number - 1});
+    task_stack.push({task.from_index, task.to_index, task.left_index, 1});
+    task_stack.push({task.from_index, task.left_index, task.to_index, task.number - 1});</b>
+  }
+}
+</pre>
+    </article>
+  </slide>
+
+  <slide class="logoslide corp-blue nobackground">
+    <article class="flexbox vcenter">
+      <span><img style="width:100%;" src="images/tehnopark.svg"></span>
+    </article>
+  </slide>
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<script>
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-XXXXXXXX-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>

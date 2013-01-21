@@ -319,7 +319,9 @@ SlideDeck.prototype.loadConfig_ = function(config) {
     document.querySelector('[data-config-title]').innerHTML = settings.title;
   }
 
-  if (settings.subtitle) {
+  if (settings.subtitle &&
+      document.querySelector('[data-config-subtitle]') &&
+      document.querySelector('[data-config-subtitle]').innerHTML.match(/\<\!\-\-.*\-\-\>/)) {
     document.querySelector('[data-config-subtitle]').innerHTML = settings.subtitle;
   }
 

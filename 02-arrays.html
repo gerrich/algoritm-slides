@@ -1,0 +1,386 @@
+<!--
+Google IO 2012 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google IO 2012</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/mail-logo_plashka.svg"></span>
+    </article>
+  </slide>
+
+  <slide class="title-slide segue nobackground">
+    <aside class="gdbar"><img src="images/mail-logo.svg"></aside>
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle>Массивы и списки</h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Как хранить последовательность элементов?</h2>
+    </hgroup>
+    <article>
+      <span>в виде встроенный массивов</span>
+<pre style="width: 60%;" class="prettyprint" data-lang="c++">
+int numbers[256];
+
+numbers[0] = 0;
+for (int i = 1; i &lt; 256; ++i) {
+  numbers[i] = numbers[i - 1] + i;
+}
+</pre>
+      <ul class="build">
+        <li>есть во всех языках</li>
+        <li>случайное чтение O(1)</li>
+        <li>случайная запись O(1)</li>
+        <li class="alert">фиксированный размер</li>
+      </ul>
+      <img style="position: absolute; bottom:200px; right:60px; width 25%;" src="pics/static_array.svg"/>
+    </article>
+  </slide>
+
+  
+  <slide>
+    <hgroup>
+      <h2>Количество данных неизвестно заранее</h2>
+      <h3>Динамический массив</h3>
+    </hgroup>
+<pre style="width: 60%;" class="prettyprint" data-lang="c++">
+struct array{
+  int *ptr; // указатель на данные
+  int size; // количество зянятых ячеек
+  int capacity; // размер выделенной памяти
+}
+</pre>
+    <article>
+      <ul>
+        <li>выделение памяти O(n)</li> 
+        <li>случайное чтение O(1)</li>
+        <li>случайная запись O(1)</li>
+        <li>вставка, удаление O(n)</li>
+        <li>вставка в конец, удаление O(1)/O(n)</li>
+      </ul> 
+      <img style="position: absolute; bottom:200px; right:60px; width 25%;" src="pics/dynamic_array.svg"/>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Динамический массив: вставка</h2>
+    </hgroup>
+    <article class="flexbox vcenter">
+      <img src="pics/push_array.svg"/>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Динамический массив</h2>
+      <h3>Сколько памяти выделять?</h3>
+    </hgroup>
+    <article>
+      <ul>
+        <li>capacity = capacity + delta</li>
+        <li>copy(ptr, new_ptr, size)</li>
+        <li>T(size, delta) = O(size + delta)</li>
+      </ul>
+      <ul class="build">
+        <li>delta = C * size</li>
+        <li>T(push(n)) = O(n) + T(push(n/C)) = O(n/(1 - 1/C)) = O(n)</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Динамический массив: реализация</h2>
+    </hgroup>
+    <article class="smaller">
+<pre class="prettyprint" data-lang="c++">
+void init(array &amp;data) {
+  data.ptr = NULL;
+  data.capacity = 0;
+  data.size = 0;
+}
+
+void resize(array &amp;data, int size) {
+  if (size &le; data.capacity) {
+    data.size = size;
+    return;
+  }
+  int *old_ptr = ptr;
+  data.ptr = new int[size];
+  data.capacity = data.capacity * 2;<b>
+  for (int i = 0; i &lt; data.size; ++i) {
+    data.ptr[i] = old_ptr[i];
+  }</b>
+  data.size = size;
+  delete [] old_ptr;
+}
+</pre>
+<!--
+void free(array &amp;data) {
+  if (data.ptr) {
+    delete [] data.ptr;
+    data.capacity = 0;
+    data.size = 0;
+  }
+}
+</pre--> 
+    </article>
+  </slide>
+
+ 
+  <slide>
+    <hgroup>
+      <h2>Динамический массив: объединение</h2>
+    </hgroup>
+    <article class="flexbox vcenter">
+      <img src="pics/join_array.svg"/>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Динамический массив: реализация</h2>
+    </hgroup>
+    <article>
+<pre class="prettyprint" data-lang="c++">
+void join(array &amp;data, array &amp;other) {
+  int old_size = data.size;
+  <b>resize(data.size + other.size); // O(n)</b>
+  for (int i = 0; i &lt; other.size; ++i) {
+    prt[i + data.size] = other.prt[i];
+  }
+  data.size += ther.size;
+}
+
+void insert(array &amp;data, int pos, int item) {
+  <b>data.resize(data.size + 1); // O(n)</b>
+  for (i = data.size - 1; i &gt; pos; --i) {
+    data.ptr[i] = data.ptr[i - 1];
+  }
+  data.ptr[pos] = item;
+}
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Дорогое изменение порядка</h2>
+    </hgroup>
+    <article>
+      <img src="pics/ulitka.jpeg"/>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Связанные списки</h2>
+    </hgroup>
+    <article>
+<pre style="width: 60%;" class="prettyprint" data-lang="c++">
+struct node_t {
+  node_t *next;
+  int data;
+};
+
+struct list {
+  node_t *first;
+};
+</pre>
+      <ul class="build">
+        <li>Последовательное чтение/запись O(1)</li>
+        <li>удаление/вставка элемента O(1)</li>
+        <li>slice/concat O(1)</li>
+        <li class="alert">Случайное чтение/запись O(n)</li>
+      </ul>
+      <img style="position:absolute; top: 120px; right:20px;" src="pics/list.svg"/>      
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Связанные списки</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>чтобы вставить элемент, надо поменять указатель в предыдущем элементе</li>
+      </ul>
+<pre style="width: 70%;" class="prettyprint" data-lang="c++">
+void insert(node_t *node, node_t *new_node) {<b>
+  new_node-&gt;next = node-&gt;next;
+  node-&gt;next = new_node;</b>
+}
+</pre>
+    <img style="position:absolute; top: 200px; right:20px;" src="pics/list_insert.svg"/>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Связанные списки</h2>
+    </hgroup>
+    <article>
+<pre style="width: 70%;" class="prettyprint" data-lang="c++">
+node_t* remove(node_t *node) {
+  node_t *to_remove = node-&gt;next;
+  if (to_remove == NULL) return NULL;<b>
+  node-&gt;next = to_remove-&gt;next;
+  to_remove-&gt;next = NULL;</b>
+  return to_remove;
+}
+</pre>
+    <img style="position:absolute; top: 200px; right:20px;" src="pics/list_remove.svg"/>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Связанные списки</h2>
+      <h3>Вставка/удаление отрезка</h3>
+    </hgroup>
+    <article>
+<pre class="prettyprint" data-lang="c++">
+void insert(node_t *node, node_t *first, node_t *last) {<b>
+  last-&gt;next = node-&gt;next;
+  node-&gt;next = first;</b>
+}
+
+node_t* remove(node_t *first, node_t *last) {<b>
+  node_t *to_remove = node-&gt;next;
+  node-&gt;next = last-&gt;next;
+  last-&gt;next = NULL;</b>
+  return to_remove;
+}
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Массивы vs Списки</h2>
+    </hgroup>
+    <article>
+      <table>
+        <tr>
+          <th>Операция</th><th>Массив</th><th>Список</th>
+        </tr>
+        <tr>
+          <td>последовательное чтение / запись</td><td>O(1)</td><td>O(1)</td>
+        </tr>
+        <tr>
+          <td>произвольное чтение / запись</td><td>O(1)</td><td>O(n)</td>
+        </tr>
+        <tr>
+          <td>удаление / добавление в конец</td><td>O(1)*</td><td>O(1)</td>
+        </tr>
+        <tr>
+          <td>удаление / вставка</td><td>O(n)</td><td>O(1)</td>
+        </tr>
+        <tr>
+          <td>определение размера</td><td>O(1)</td><td>O(n)*</td>
+        </tr>
+      </table>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Очереди(FIFO) и стеки(LIFO)</h2>
+    </hgroup>
+    <article class="flexbox vcenter">
+      <span><img style="width:100%;" src="pics/queue_and_stack.svg"></span>
+    </article>
+  </slide>
+  
+  <slide>
+    <hgroup>
+      <h2>Очередь: тривиальная реализация</h2>
+    </hgroup>
+    <article>
+    <pre class="prettyprint" data-lang="c++">
+struct queue {
+  node_t *first;
+  node_t *last;
+};
+
+void push(queue_t &amp;queue, int &amp;item) {
+  node_t *node = new node_t({NULL, item});
+  insert(queue.last, node);
+}
+
+int pop(queue_t &amp;queue) {
+  int value = queue.first-&gt;data;
+  node_t *to_remove = remove(&amp;queue.first);
+  delete to_remove;
+  return value;
+}
+    </pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2></h2>
+    </hgroup>
+    <article>
+    </article>
+  </slide>
+
+  <slide class="logoslide corp-blue nobackground">
+    <article class="flexbox vcenter">
+      <span><img style="width:100%;" src="images/tehnopark.svg"></span>
+    </article>
+  </slide>
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<script>
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-XXXXXXXX-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>

@@ -292,21 +292,25 @@ slides > slide.far-next {
 slides > slide.dark {
   background: #515151 !important;
 }
+
+.corp-blue {
+  background: #0857A6 !important;
+}
+
 /* line 171, ../scss/default.scss */
 slides > slide:not(.nobackground):before {
-  font-size: 12pt;
-  content: "#yourhashtag";
+  content: "";
+  background: url(../../images/tehnopark_plashka.svg) no-repeat 100% 50%;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
   position: absolute;
+
   bottom: 20px;
-  left: 60px;
-  background: url(../../images/google_developers_icon_128.png) no-repeat 0 50%;
-  -webkit-background-size: 30px 30px;
-  -moz-background-size: 30px 30px;
-  -o-background-size: 30px 30px;
-  background-size: 30px 30px;
-  padding-left: 40px;
-  height: 30px;
-  line-height: 1.9;
+  right: 20px;
+  height: 40px;
+  width: 100%;
 }
 /* line 183, ../scss/default.scss */
 slides > slide:not(.nobackground):after {
@@ -320,7 +324,7 @@ slides > slide:not(.nobackground):after {
 /* line 194, ../scss/default.scss */
 slides > slide.title-slide:after {
   content: '';
-  background: url(../../images/io2012_logo.png) no-repeat 100% 50%;
+  background: url(../../images/mail-logo_plashka.svg) no-repeat 100% 50%;
   -webkit-background-size: contain;
   -moz-background-size: contain;
   -o-background-size: contain;
@@ -1278,12 +1282,12 @@ aside.gdbar {
   -ms-border-radius: 0 10px 10px 0;
   -o-border-radius: 0 10px 10px 0;
   border-radius: 0 10px 10px 0;
-  background: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #e6e6e6), color-stop(100%, #e6e6e6)) no-repeat;
-  background: -webkit-linear-gradient(left, #e6e6e6, #e6e6e6) no-repeat;
-  background: -moz-linear-gradient(left, #e6e6e6, #e6e6e6) no-repeat;
-  background: -o-linear-gradient(left, #e6e6e6, #e6e6e6) no-repeat;
-  background: -ms-linear-gradient(left, #e6e6e6, #e6e6e6) no-repeat;
-  background: linear-gradient(left, #e6e6e6, #e6e6e6) no-repeat;
+  background: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #0857A6), color-stop(100%, #0857A6)) no-repeat;
+  background: -webkit-linear-gradient(left, #0857A6, #0857A6) no-repeat;
+  background: -moz-linear-gradient(left, #0857A6, #0857A6) no-repeat;
+  background: -o-linear-gradient(left, #0857A6, #0857A6) no-repeat;
+  background: -ms-linear-gradient(left, #0857A6, #0857A6) no-repeat;
+  background: linear-gradient(left, #0857A6, #0857A6) no-repeat;
   -webkit-background-size: 0% 100%;
   -moz-background-size: 0% 100%;
   -o-background-size: 0% 100%;
@@ -1324,8 +1328,10 @@ aside.gdbar.bottom {
 }
 /* line 913, ../scss/default.scss */
 aside.gdbar img {
-  width: 85px;
+  width: 200px;
+  /*
   height: 85px;
+  */
   position: absolute;
   right: 0;
   margin: 8px 15px;
@@ -1358,7 +1364,6 @@ aside.gdbar img {
 
 /* line 949, ../scss/default.scss */
 .quote {
-  color: #e6e6e6;
 }
 /* line 952, ../scss/default.scss */
 .quote .author {
@@ -1413,6 +1418,23 @@ aside.gdbar img {
 /* line 1007, ../scss/default.scss */
 .overview .slide-area {
   display: none;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+sup {
+  vertical-align: text-top;
+  font-size: 0.7em;
+}
+sub {
+  font-size: 0.7em;
+  vertical-align: text-bottom;
+}
+
+.alert {
+  color: red;
 }
 
 @media print {

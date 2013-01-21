@@ -1,0 +1,276 @@
+<!--
+Google IO 2012 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google IO 2012</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/mail-logo_plashka.svg"></span>
+    </article>
+  </slide>
+
+  <slide class="title-slide segue nobackground">
+    <aside class="gdbar"><img src="images/mail-logo.svg"></aside>
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle>Сортировки</h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Как упорядочить последоваательность ?</h2>
+    </hgroup>
+    <article class="flexbox vcenter">
+      <img src="pics/sort.jpg"/>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Сортировка вставками</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Дана последовательность из n элементов</li>
+        <li>Создём второй массив размером n</li>
+        <li>Для каждого элемента находим его позицию во втором массиве</li>
+        <li>Вставляем элемент на нужную позицию</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Сортировка вставками</h2>
+    </hgroup>
+    <article>
+<pre class="prettyprint" data-lang="c++">
+int data[SIZE];
+
+for (int i = 0; i &lt; SIZE; ++i) {
+  int value = data[i];
+  for (int pos = i; pos &gt; 0 &amp;&amp; data[pos - i] &lt; value; --pos) {
+    data[pos] = data[pos - i];
+  }
+  data[pos] = value;
+}
+</pre>
+    <ul>
+      <li>Лучшее время O(n)</li>
+      <li>Худшее время O(n<sup>2</sup>/2)</li>
+      <li>Среднее время O(n<sup>2</sup>/4)</li>
+    <ul>
+    </ul>
+      <li>Самая быстрая из O(n<sup>2</sup>) сортировок</li>
+      <li>Хороший выбор при маленьких <strong>n</strong></li>
+    </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Не используйте bubble-sort</h2>
+    </hgroup>
+    <article class="flexbox vcenter">
+      <img src="pics/bubble-wrap-not.jpg"/>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Быстрая сортировка</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Выбираем произвольный элемент массива (pivot)</li>
+        <li>Элементы &le; выбранного складываем в левую часть массива</li>
+        <li>Остальные оставляем справа</li>
+        <li>Сортируем левую и правую части по отдельности</li>
+      </ul>
+      <ul class="build">
+        <li>Если pivot делит массив пополам: T(n) = O(n) + T(n/2) + T(n/2) = O(n) * ln<sub>2</sub>(n)</li>
+        <li>Если размер одной из частей всегда равен 1: T(n) = O(n) + 1 + T(n-1) = O(n<sup>2</sup>)</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Быстрая сортировка</h2>
+      <h3>Матожидание сложности</h2>  
+    </hgroup>
+    <article>
+      пусть пивоты на каждом шаге выбираются случайно и независимо<br/>
+      M(T(n)) = sum(k = 1..n-1, M(T(k)) + M(T(n-k)))/(n-1) + C*n;<br/>
+      f(n) - f(n-1) = (1/(n-1) - 1/(n-2))*sum(k = 1..n-2, 2*f(k)) + 2*f(n-1)/(n-1) + C;<br/>
+      
+      f(n) - f(n-1) = 2*f(n-1)/(n-1) - 1/(n-1)*(f(n-1) - C*(n-1)) - C;<br/>
+      f(n) - f(n-1)  = f(n-1)/(n-1) + 2C = f(n-1)*n/(n-1) + 2C;<br/>
+      f(n) = 2C * (1 + n/(n-1) + n/(n-1)*(n-1)/(n-2) + .. + n) = 2Cn * sum(k=1..n, 1/k) = 2Cn*ln(n)
+    </article>
+  </slide>
+
+
+  <slide>
+    <hgroup>
+      <h2>Быстрая сортировка: реализация</h2>
+    </hgroup>
+    <article class="smaller">
+<pre class="prettyprint" data-lang="c++">
+//TODO
+</pre>
+    </article>
+  </slide>
+
+ 
+  <slide>
+    <hgroup>
+      <h2>Быстрая сортировка: ускорение</h2>
+      <h3>Как выбирать пивоты?</h3>
+    </hgroup>
+    <article>
+      <ul>
+        <li>медиана</li>
+        <li>не дальше n*Const от медианы</li>  
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Поиск медианы за O(n)</h2>
+      <h3>Медиана медиан</h3>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Если n &lt; Const, отсортируем массив методом вставок и вернём позицию n/2</li>
+        <li>Разделим массив на 5ки. И отсуртируем элементы внутри каждой из них</li>
+        <li>Составим массив из медиан пятёрок и наёдём его медиану (M)</li>
+        <li>2/5 ячеек в пятёрках, чьи медианы меньше M, также меньше M</li>
+        <li>2/5 ячеек в пятёрках, чьи медианы больше M, также больше M</li>
+        <li>исключим их из области поиска</li>
+        <li>найдём медиану среди оставшихся элементов</li>
+        <li>...</li>
+      </ul>
+    </article>
+  </slide>
+  
+  <slide>
+    <hgroup>
+      <h2>Медиана медиан</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Каждый шаг имеет сложность O(n)</li> 
+        <li>На каждом шаге исключается (n-5) * 2/5 элементов</li>  
+        <li>количество шагов log<sub>5/2</sub>(n)</li>
+        <li>Суммарная сложность T(n) = O(n) * 5/2 = O(n)</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>k - порядковые статистики</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>minimum, mediana и maximum - 1я, n/2 и n-я статистики</li>
+        <li>Обобщение метода поиска медианы на произвольную позицию k из 1..n</li>
+        <li>Если изменить соотношение 1/2 на k/n, метод медиан будет находить k-ю  статистику</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+    <h2>Быстрая сортировка с худшим временем O(n<sup>2</sup>)</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>в качестве пивота выбираем медиану отрезка M</li>
+        <li>Элементы &le; М оставляем в левой части</li>
+        <li>Остальные элементы переносим в правую часть</li>
+        <li>Вызываем quickSort на левой и правой частях</li>
+        <li>...</li>
+      </ul>
+      <ul>
+        <li>T(n) = O(n) + T(n/2) * 2 = O(n) * log<sub>2</sub>(n)</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Частичная сортировка</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Дана последовательность a<sub>1</sub>, .. a<sub>n</sub> и отрезок [i,j]</li>
+        <li>Найти элементы, стоящие на позициях i,i+1, ... j в отсортированном массиве</li>
+        <li>Будем сортировать массив с помошью quick sort</li>
+        <li>Будем продолжать рекурсию только на отрезках, пересекающихся с [i,j]</li>
+        <li>...</li>
+      </ul>
+      <ul>
+        <li>Лучшее время O(n*ln(j-i+1))</li>
+        <li>Худшее время O(n<sup>2</sup>)</li>
+        <li>Среднее время O(n*ln(j-i+1))</li>
+      </ul>
+    </article>
+  </slide>
+  
+  <slide class="logoslide corp-blue nobackground">
+    <article class="flexbox vcenter">
+      <span><img style="width:100%;" src="images/tehnopark.svg"></span>
+    </article>
+  </slide>
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<script>
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-XXXXXXXX-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>
